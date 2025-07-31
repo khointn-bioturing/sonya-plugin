@@ -1,4 +1,4 @@
-provider: openai_api_compatible
+provider: sonya_plugin
 label:
   en_US: OpenAI-API-compatible
 description:
