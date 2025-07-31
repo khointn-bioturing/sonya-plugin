@@ -1,6 +1,6 @@
 version: 0.0.19
 type: plugin
-author: "langgenius"
+author: "khointn-bioturing"
 name: "openai_api_compatible"
 description:
   en_US: Model providers compatible with OpenAI's API standard, such as LM Studio.
