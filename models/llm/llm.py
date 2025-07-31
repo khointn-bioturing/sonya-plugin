@@ -100,6 +100,7 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
         # This ensures models like gpt-4o produce the correct structured output.
         # The original 'json_schema' parameter is intentionally not removed to support
         # other potential OpenAI-compatible models that might handle it differently.
+        stream=False
         if model_parameters.get("response_format") == "json_schema":
             model_parameters["response_format"] = "json_object"
             json_schema_str = model_parameters.get("json_schema")  # Use .get() instead of .pop() for safety
