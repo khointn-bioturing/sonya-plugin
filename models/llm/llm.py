@@ -145,7 +145,7 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
                 model_parameters,
                 tools,
                 stop,
-                stream=False,
+                stream=True,
                 user=user,
             ):
                 response_parts.append(str(part))
