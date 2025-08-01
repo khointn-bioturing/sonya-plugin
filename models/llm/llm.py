@@ -122,6 +122,7 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
         if enable_thinking is not None:
             model_parameters["chat_template_kwargs"] = {"enable_thinking": bool(enable_thinking)}
 
+        model_parameters["model"] = model
         if stream:
             # yield each chunk from the base streaming generator
             for chunk in super()._invoke(
