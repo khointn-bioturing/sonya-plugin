@@ -100,7 +100,7 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
         # This ensures models like gpt-4o produce the correct structured output.
         # The original 'json_schema' parameter is intentionally not removed to support
         # other potential OpenAI-compatible models that might handle it differently.
-        
+        # stream=False
         if model_parameters.get("response_format") == "json_schema":
             model_parameters["response_format"] = "json_object"
             json_schema_str = model_parameters.get("json_schema")  # Use .get() instead of .pop() for safety
@@ -121,34 +121,31 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
         if enable_thinking is not None:
             model_parameters["chat_template_kwargs"] = {"enable_thinking": bool(enable_thinking)}
 
-        # return super()._invoke(
-        #     model,
-        #     credentials,
-        #     prompt_messages,
-        #     model_parameters,
-        #     tools,
-        #     stop,
-        #     stream,
-        #     user,
-        # )
-
-        # Get the streaming generator from the base _invoke
-        # catch the streaming repsonse
-        response_stream = []
-        
-        for chunk in super()._invoke(
-            model,
-            credentials,
-            prompt_messages,
-            model_parameters,
-            tools,
-            stop,
-            stream=True,
-            user=user,
-        ):
-            response_stream.append(str(chunk))
-
-
-        return ' '.join(response_stream)
-
-        
+        if stream:
+            # yield each chunk from the base streaming generator
+            for chunk in super()._invoke(
+                model,
+                credentials,
+                prompt_messages,
+                model_parameters,
+                tools,
+                stop,
+                stream=True,
+                user=user,
+            ):
+                yield chunk
+        else:
+            # collect the non‑streaming result into a single string
+            response_parts = []
+            for part in super()._invoke(
+                model,
+                credentials,
+                prompt_messages,
+                model_parameters,
+                tools,
+                stop,
+                stream=False,
+                user=user,
+            ):
+                response_parts.append(str(part))
+            return ' '.join(response_parts)
