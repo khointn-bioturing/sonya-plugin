@@ -101,7 +101,6 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
         # The original 'json_schema' parameter is intentionally not removed to support
         # other potential OpenAI-compatible models that might handle it differently.
         
-        stream=False
         if model_parameters.get("response_format") == "json_schema":
             model_parameters["response_format"] = "json_object"
             json_schema_str = model_parameters.get("json_schema")  # Use .get() instead of .pop() for safety
@@ -122,7 +121,7 @@ class OpenAILargeLanguageModel(OAICompatLargeLanguageModel):
         if enable_thinking is not None:
             model_parameters["chat_template_kwargs"] = {"enable_thinking": bool(enable_thinking)}
 
-        model_parameters["model"] = model
+        # model_parameters["model"] = model
         if stream:
             # yield each chunk from the base streaming generator
             for chunk in super()._invoke(
